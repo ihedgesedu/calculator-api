@@ -168,3 +168,38 @@ def squareRoot(number: str):
     except ZeroDivisionError:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be greater than zero")
     
+
+@app.get("/amortization/{months}/{principal}/{monthlyRate}", status_code=200)
+def amortization(months: str, principal: str, monthlyRate: str):
+    """
+    Calculates the monthly payment for a loan based on term, principal (loan amount),
+    and interest rate per period.
+
+    Parameters
+    - months: Length of loan in months
+    - principal: Dollar value of loan after down payment
+    - monthlyRate: Interest rate on loan on a monthly basis (APR/12). Must be entered as a decimal value (0.01 instead of 1%)
+
+    Returns
+    - JSON object with the result
+    """
+
+    try:
+        months = float(months)
+        principal = float(principal)
+        monthlyRate = float(monthlyRate)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="All numbers must be numeric. Please review entries and submit numeric values")
+
+    if (months < 1):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Months must be greater than or equal to 1. Please enter a valid number of months")
+    
+    if (principal <= 0):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Principal must be greater than 0. Please enter a new principal amount")
+
+    if (monthlyRate < 0):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Monthly rate must be greater than 0. Please enter a new monthly rate")   
+
+    paymentAmount = principal * ((monthlyRate * (1+monthlyRate) ** months) / ((1 + monthlyRate) ** months - 1))
+    
+    return {'result': paymentAmount}
