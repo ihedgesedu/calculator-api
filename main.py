@@ -50,3 +50,119 @@ def subtract(a: str, b: str):
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
 
     return {"result": a - b}
+
+
+@app.get("/multiply/{a}/{b}", status_code=200)
+def multiply(a: str, b: str):
+    """
+    Multiplies number a by number b.
+    
+    Parameters:
+    - a: First number
+    - b: Second number
+    
+    Returns:
+    - JSON object with the result
+    """
+    try:
+        a = float(a)
+        b = float(b)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
+
+    return {"result": a * b}
+
+
+@app.get("/divide/{a}/{b}", status_code=200)
+def divide(a: str, b: str):
+    """
+    Divides number a by number b.
+    
+    Parameters:
+    - a: First number
+    - b: Second number
+    
+    Returns:
+    - JSON object with the result
+    """
+    try:
+        a = float(a)
+        b = float(b)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
+    
+    try:
+        return {"result": a / b}
+    except ZeroDivisionError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Cannot divide by zero")
+
+
+@app.get("/imperial-to-metric-height/{feet}/{inches}", status_code=200)
+def imperialToMetricHeight(feet: str, inches: str):
+    """
+    Converts height in feet and inches to centimeters.
+    
+    Parameters:
+    - feet: Number of feet in height
+    - inches: Number of inches in height
+    
+    Returns:
+    - JSON object with the result
+    """
+    try:
+        feet = float(feet)
+        inches = float(inches)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both feet and inches must be numeric")
+
+    centimeters = (feet * 12 + inches) * 2.54
+
+    return {"result": centimeters}
+
+
+@app.get("/metric-to-imperial-height/{centimeters}", status_code=200)
+def metricToImperialHeight(centimeters: str):
+    """
+    Converts height in centimeters to feet and inches.
+    
+    Parameters:
+    - centimeters: Height in centimeters
+    
+    Returns:
+    - JSON object with the result
+    """
+    try:
+        centimeters = float(centimeters)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Centimeters must be numeric")
+
+    feet = centimeters // 30.48
+    inches = (centimeters % 30.48) // 2.54
+
+    imperialHeight = {"feet": feet, "inches": inches}
+
+    return {"result": imperialHeight}
+
+
+@app.get("/square-root/{number}", status_code=200)
+def squareRoot(number: str):
+    """
+    Calculates the square root of a number.
+
+    Parameters:
+    - number: Number to calculate the square root of
+    
+    Returns:
+    - JSON object with the result
+    """
+    try:
+        number = float(number)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be numeric")
+
+    try:
+        return {"result": number ** 0.5}
+    except ZeroDivisionError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be greater than zero")
+    except number < 0:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be non-negative")
