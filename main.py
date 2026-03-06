@@ -160,9 +160,11 @@ def squareRoot(number: str):
     except ValueError:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be numeric")
 
+    if number < 0:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be non-negative")
+
     try:
         return {"result": number ** 0.5}
     except ZeroDivisionError:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be greater than zero")
-    except number < 0:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be non-negative")
+    
