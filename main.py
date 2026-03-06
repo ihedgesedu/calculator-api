@@ -2,6 +2,19 @@ from fastapi import FastAPI, status, HTTPException
 
 app = FastAPI()
 
+# 1. Define allowed origins
+# For testing, you can use ["*"], but in production, use your frontend URL
+origins = ["*"]
+
+# 2. Add the middleware to your app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/", status_code=200)
 def read_root():
