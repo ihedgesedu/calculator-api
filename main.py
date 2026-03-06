@@ -1,4 +1,5 @@
 from fastapi import FastAPI, status, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
