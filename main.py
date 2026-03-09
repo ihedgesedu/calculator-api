@@ -217,3 +217,29 @@ def amortization(months: str, principal: str, monthlyRate: str):
     paymentAmount = principal * ((monthlyRate * (1+monthlyRate) ** months) / ((1 + monthlyRate) ** months - 1))
     
     return {'result': paymentAmount}
+
+
+@app.get("/tip/{subtotal}/{percentage}", status_code=200)
+def tip(subtotal: str, percentage: str):
+    """
+    Calculates tip amount based on subtotal and desired percentage.
+    
+    Parameters:
+    - subtotal: Total before tip
+    - percentage: Tip percentage
+    
+    Returns:
+    - JSON object with the result
+    """
+    try:
+        subtotal = float(subtotal)
+        percentage = float(percentage)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Subtotal and percentage must be numeric")
+
+    if (percentage < 0 or subtotal < 0):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Subtotal and percentage must be greater than 0.")
+
+    tip = subtotal * (percentage / 100)
+
+    return {"result": tip}
