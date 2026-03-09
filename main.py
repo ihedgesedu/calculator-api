@@ -153,6 +153,10 @@ def metricToImperialHeight(centimeters: str):
     except ValueError:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Centimeters must be numeric. Please enter a numeric value for centimeters""")
 
+    if centimeters < 0:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Centimeters must be non-negative. Please enter a non-negative value for centimeters""")
+
+
     feet = centimeters // 30.48
     inches = (centimeters % 30.48) // 2.54
 
