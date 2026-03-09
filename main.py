@@ -40,7 +40,7 @@ def add(a:str, b:str):
         a = float(a)
         b = float(b)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail= """Both a and b must be numeric. Please enter a numeric value for a and b""")
 
     return {"result": a + b}
 
@@ -61,7 +61,7 @@ def subtract(a: str, b: str):
         a = float(a)
         b = float(b)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail= """Both a and b must be numeric. Please enter a numeric value for a and b""")
 
     return {"result": a - b}
 
@@ -82,7 +82,7 @@ def multiply(a: str, b: str):
         a = float(a)
         b = float(b)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""Both a and b must be numeric. Please enter a numeric value for a and b""")
 
     return {"result": a * b}
 
@@ -103,12 +103,12 @@ def divide(a: str, b: str):
         a = float(a)
         b = float(b)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both a and b must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Both a and b must be numeric. Please enter a numeric value for a and b""")
     
     try:
         return {"result": a / b}
     except ZeroDivisionError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Cannot divide by zero")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""Division by zero is not allowed.  Please enter a non-zero value for b""")
 
 
 @app.get("/imperial-to-metric-height/{feet}/{inches}", status_code=200)
@@ -127,7 +127,7 @@ def imperialToMetricHeight(feet: str, inches: str):
         feet = float(feet)
         inches = float(inches)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Both feet and inches must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Both feet and inches must be numeric. Please enter a numeric value for feet and inches""")
 
     centimeters = (feet * 12 + inches) * 2.54
 
@@ -148,7 +148,7 @@ def metricToImperialHeight(centimeters: str):
     try:
         centimeters = float(centimeters)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Centimeters must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Centimeters must be numeric. Please enter a numeric value for centimeters""")
 
     feet = centimeters // 30.48
     inches = (centimeters % 30.48) // 2.54
@@ -172,15 +172,15 @@ def squareRoot(number: str):
     try:
         number = float(number)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""Value must be numeric.  Please review and submit numeric value""")
 
     if number < 0:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be non-negative")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""Number must be non-negative. Please enter a non-negative number""")
 
     try:
         return {"result": number ** 0.5}
     except ZeroDivisionError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Number must be greater than zero")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""Number must be greater than zero. Please enter a positive number""")
     
 
 @app.get("/amortization/{months}/{principal}/{monthlyRate}", status_code=200)
@@ -203,16 +203,16 @@ def amortization(months: str, principal: str, monthlyRate: str):
         principal = float(principal)
         monthlyRate = float(monthlyRate)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="All numbers must be numeric. Please review entries and submit numeric values")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""All values must be numeric. Please review entries and submit numeric values""")
 
     if (months < 1):
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Months must be greater than or equal to 1. Please enter a valid number of months")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Months must be greater than or equal to 1. Please enter a valid number of months""")
     
     if (principal <= 0):
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Principal must be greater than 0. Please enter a new principal amount")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Principal must be greater than 0. Please enter a positive principal amount""")
 
     if (monthlyRate < 0):
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Monthly rate must be greater than 0. Please enter a new monthly rate")   
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Monthly rate must be greater than 0. Please enter a positive monthly rate.""")   
 
     paymentAmount = principal * ((monthlyRate * (1+monthlyRate) ** months) / ((1 + monthlyRate) ** months - 1))
     
@@ -235,10 +235,10 @@ def tip(subtotal: str, percentage: str):
         subtotal = float(subtotal)
         percentage = float(percentage)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Subtotal and percentage must be numeric")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="""Subtotal and percentage must be numeric. Please enter a numeric subtotal and percentage""")
 
     if (percentage < 0 or subtotal < 0):
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "Subtotal and percentage must be greater than 0.")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Subtotal and percentage must be greater than 0. Please enter a positive subtotal and percentage""")
 
     tip = subtotal * (percentage / 100)
 
