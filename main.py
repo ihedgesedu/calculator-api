@@ -129,6 +129,9 @@ def imperialToMetricHeight(feet: str, inches: str):
     except ValueError:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Both feet and inches must be numeric. Please enter a numeric value for feet and inches""")
 
+    if (feet < 0 or inches < 0):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail = """Feet and inches must be non-negative. Please enter a non-negative value for feet and inches""")
+
     centimeters = (feet * 12 + inches) * 2.54
 
     return {"result": centimeters}
